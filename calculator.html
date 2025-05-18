@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>iOS Style Animated Calculator with Flowering Background</title>
+<style>
+  @keyframes floatUp {
+    0% {
+      transform: translateY(100vh) scale(0.5) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-10vh) scale(1) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: #1c1c1e;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Flower petals container */
+  .flower-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  /* Flower petals */
+  .flower {
+    position: absolute;
+    bottom: -50px;
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle at center, #ff6b81 40%, #ff4757 90%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    filter: drop-shadow(0 0 2px #ff6b81);
+    animation-name: floatUp;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  /* Different sizes and animation durations */
+  .flower:nth-child(1) {
+    left: 10%;
+    animation-duration: 12s;
+    animation-delay: 0s;
+  }
+  .flower:nth-child(2) {
+    left: 25%;
+    width: 20px;
+    height: 20px;
+    animation-duration: 15s;
+    animation-delay: 3s;
+  }
+  .flower:nth-child(3) {
+    left: 40%;
+    animation-duration: 10s;
+    animation-delay: 5s;
+  }
+  .flower:nth-child(4) {
+    left: 55%;
+    width: 25px;
+    height: 25px;
+    animation-duration: 14s;
+    animation-delay: 2s;
+  }
+  .flower:nth-child(5) {
+    left: 70%;
+    animation-duration: 13s;
+    animation-delay: 4s;
+  }
+  .flower:nth-child(6) {
+    left: 85%;
+    width: 18px;
+    height: 18px;
+    animation-duration: 16s;
+    animation-delay: 1s;
+  }
+
+  .calculator {
+    position: relative;
+    background-color: #1c1c1e;
+    border-radius: 30px;
+    box-shadow:
+      0 10px 30px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    width: 360px;
+    padding: 30px 25px;
+    z-index: 1;
+  }
+  .display {
+    width: 100%;
+    height: 80px;
+    background-color: #2c2c2e;
+    color: #fff;
+    font-size: 3rem;
+    text-align: right;
+    padding: 15px 20px;
+    border-radius: 25px;
+    box-sizing: border-box;
+    margin-bottom: 25px;
+    user-select: none;
+    overflow-x: auto;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+  }
+  button {
+    font-size: 1.5rem;
+    padding: 20px 0;
+    border: none;
+    border-radius: 50%;
+    background-color: #2c2c2e;
+    color: white;
+    box-shadow:
+      0 5px 0 #1a1a1c,
+      0 10px 15px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition:
+      background-color 0.3s ease,
+      transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+  }
+  button:active {
+    transform: scale(0.85);
+    box-shadow:
+      0 2px 0 #1a1a1c,
+      0 5px 8px rgba(0, 0, 0, 0.7);
+    background-color: #3a3a3c;
+  }
+  button.operator {
+    background-color: #ff9500;
+    box-shadow:
+      0 5px 0 #b26e00,
+      0 10px 15px rgba(255, 149, 0, 0.5);
+  }
+  button.operator:active {
+    background-color: #cc7a00;
+  }
+  button.equal {
+    background-color: #34c759;
+    box-shadow:
+      0 5px 0 #248a3a,
+      0 10px 15px rgba(52, 199, 89, 0.5);
+    grid-column: span 2;
+  }
+  button.equal:active {
+    background-color: #1e5e26;
+  }
+  button.clear {
+    background-color: #ff3b30;
+    box-shadow:
+      0 5px 0 #b22a23,
+      0 10px 15px rgba(255, 59, 48, 0.5);
+  }
+  button.clear:active {
+    background-color: #cc2a22;
+  }
+  button#backspace {
+    background-color: #636366;
+    box-shadow:
+      0 5px 0 #3e3e40,
+      0 10px 15px rgba(99, 99, 102, 0.5);
+  }
+  button#backspace:active {
+    background-color: #4a4a4c;
+  }
+  button[data-number="0"] {
+    border-radius: 40px;
+    grid-column: span 2;
+    padding-left: 40px;
+    text-align: left;
+    padding-right: 20px;
+  }
+</style>
+</head>
+<body>
+  <div class="flower-container" aria-hidden="true">
+    <div class="flower"></div>
+    <div class="flower"></div>
+    <div class="flower"></div>
+    <div class="flower"></div>
+    <div class="flower"></div>
+    <div class="flower"></div>
+  </div>
+  <div class="calculator" role="application" aria-label="Calculator">
+    <div id="display" class="display" aria-live="polite" aria-atomic="true">0</div>
+    <div class="buttons">
+      <button class="clear" id="clear" aria-label="Clear">C</button>
+      <button id="backspace" aria-label="Backspace">⌫</button>
+      <button class="operator" data-operator="/" aria-label="Divide">÷</button>
+      <button class="operator" data-operator="*" aria-label="Multiply">×</button>
+
+      <button data-number="7" aria-label="7">7</button>
+      <button data-number="8" aria-label="8">8</button>
+      <button data-number="9" aria-label="9">9</button>
+      <button class="operator" data-operator="-" aria-label="Subtract">−</button>
+
+      <button data-number="4" aria-label="4">4</button>
+      <button data-number="5" aria-label="5">5</button>
+      <button data-number="6" aria-label="6">6</button>
+      <button class="operator" data-operator="+" aria-label="Add">+</button>
+
+      <button data-number="1" aria-label="1">1</button>
+      <button data-number="2" aria-label="2">2</button>
+      <button data-number="3" aria-label="3">3</button>
+      <button class="equal" id="equals" aria-label="Equals">=</button>
+
+      <button data-number="0" aria-label="0">0</button>
+      <button data-number="." aria-label="Decimal point">.</button>
+    </div>
+  </div>
+
+<script>
+  (function() {
+    const display = document.getElementById('display');
+    let currentInput = '0';
+    let resetNext = false;
+
+    function updateDisplay() {
+      display.textContent = currentInput;
+    }
+
+    function appendNumber(num) {
+      if (resetNext) {
+        currentInput = num === '.' ? '0.' : num;
+        resetNext = false;
+      } else {
+        if (num === '.' && currentInput.includes('.')) return;
+        if (currentInput === '0' && num !== '.') {
+          currentInput = num;
+        } else {
+          currentInput += num;
+        }
+      }
+    }
+
+    function appendOperator(op) {
+      if (resetNext) resetNext = false;
+      if (/[+\-*/]$/.test(currentInput)) {
+        currentInput = currentInput.slice(0, -1) + op;
+      } else {
+        currentInput += op;
+      }
+    }
+
+    function clearAll() {
+      currentInput = '0';
+      resetNext = false;
+    }
+
+    function backspace() {
+      if (resetNext) {
+        clearAll();
+        return;
+      }
+      if (currentInput.length === 1) {
+        currentInput = '0';
+      } else {
+        currentInput = currentInput.slice(0, -1);
+      }
+    }
+
+    function calculate() {
+      try {
+        let result = Function('"use strict";return (' + currentInput + ')')();
+        if (result === Infinity || result === -Infinity) {
+          currentInput = 'Error';
+        } else {
+          currentInput = String(result);
+        }
+      } catch (e) {
+        currentInput = 'Error';
+      }
+      resetNext = true;
+    }
+
+    document.querySelectorAll('button[data-number]').forEach(button => {
+      button.addEventListener('click', () => {
+        appendNumber(button.getAttribute('data-number'));
+        updateDisplay();
+      });
+    });
+
+    document.querySelectorAll('button.operator').forEach(button => {
+      button.addEventListener('click', () => {
+        appendOperator(button.getAttribute('data-operator'));
+        updateDisplay();
+      });
+    });
+
+    document.getElementById('clear').addEventListener('click', () => {
+      clearAll();
+      updateDisplay();
+    });
+
+    document.getElementById('backspace').addEventListener('click', () => {
+      backspace();
+      updateDisplay();
+    });
+
+    document.getElementById('equals').addEventListener('click', () => {
+      calculate();
+      updateDisplay();
+    });
+
+    updateDisplay();
+  })();
+</script>
+</body>
+</html>
